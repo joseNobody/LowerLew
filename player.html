@@ -1,0 +1,28 @@
+<head>
+<title>lowerLew | videoPlayer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/png" href="images/icon.png">
+<link rel="stylesheet" href="style.css">
+<link href="https://vjs.zencdn.net/8.23.4/video-js.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/videojs-mobile-ui/dist/videojs-mobile-ui.css">
+<style>
+body { background-color: rgba(170, 229, 163, 255) }
+</style>
+<input id="search" placeholder="Search Tags" />
+<input id="pages" placeholder="pages" />
+<button id="searchB">Search</button>
+<button id="randomBtn">Random</button>
+<div id="suggestionsBox"></div>
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script>
+<script src="https://vjs.zencdn.net/8.23.4/video.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/videojs-mobile-ui/dist/videojs-mobile-ui.min.js"></script>
+<script>eruda.init();</script>
+<p id="content"></p>
+</head>
+<body>
+  <div id="playerHolder" class="video-container">
+    <script src="videoPlayer.js"></script>
+  </div>
+</body>
