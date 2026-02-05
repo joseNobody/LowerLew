@@ -215,6 +215,6 @@ if (videoUrl.searchParams.has('id')) {
   getId(url)
 }
 else { 
-  let url = 'https://api.rule34.xxx/index.php?api_key=' + api_key + '&user_id=2995454&page=dapi&s=post&q=index&id=8699761&json=1'
+  let url = 'https://api.rule34.xxx/index.php?api_key=' + api_key + '&user_id=2995454&page=dapi&s=post&q=index&id=8699761&json=1&is=fobs'
   getId(url)
 }
