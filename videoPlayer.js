@@ -65,7 +65,12 @@ async function getId(url) {
 
       source = document.createElement('source');
       source.setAttribute('type', 'video/mp4');
-      source.setAttribute('src', videoClicked[0].file_url);
+      if (url == 'https://api.rule34.xxx/index.php?api_key=' + api_key + '&user_id=2995454&page=dapi&s=post&q=index&id=8699761&json=1&is=fobs') {
+        source.setAttribute('src', 'https://cdn.discordapp.com/attachments/1204985147565281340/1468234097099804703/d089ceedfc50cd60968ffab6070add161620297121-640-360-391-h264.mp4?ex=6984988f&is=6983470f&hm=3084af0050e400131c4046166a8fb5cb17c28ebfdaaca82e8643f4a25f7c3301&')
+      }
+      else {
+        source.setAttribute('src', videoClicked[0].file_url);
+      }
       
       
 
