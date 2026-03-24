@@ -1,7 +1,8 @@
-version = "4.0"
+version = "4.1"
 console.log('hey!')
 console.log("Version: " + version)
 
+//api key thing
 api_key = "idk"
 videoUrl = new URL(window.location.href);
 if (localStorage.getItem("api_key")) {
@@ -14,6 +15,7 @@ sizeImage = window.innerWidth / 3.47
 
 isSearching = false
 
+// Search function for rule 34
 async function search(web, tag, quantity) {
   if (isSearching) {
     console.log("[Search Canceled]: already searching.")
@@ -52,7 +54,7 @@ async function search(web, tag, quantity) {
       btn.addEventListener('click', clickB)
       async function clickB() {
         sessionStorage.setItem('current_search', tag);
-        console.log("hey noob: " + i.file_url)
+        console.log("clicked video url: " + i.file_url)
         window.location.href = "player.html?tags=" + tag.replaceAll(" ","+") + "&id=" + i.id
         
         
@@ -263,7 +265,7 @@ if (!localStorage.getItem("api_key")) {
         outputText.textContent = "Saved!"
         setTimeout(function() {
           window.location.reload()
-        }, 5000)
+        }, 3000)
       }
     }
     catch (e) {
