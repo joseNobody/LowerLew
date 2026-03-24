@@ -2,10 +2,10 @@
 var obj,
   source;
 
-api_key = "no key for you! hehe"
+api_key = ""
 videoUrl = new URL(window.location.href);
-if (videoUrl.searchParams.has('api')) {
-  api_key = videoUrl.searchParams.get('api')
+if (localStorage.getItem("api_key")) {
+  api_key = localStorage.getItem("api_key")
 }
 var videoClicked
 
@@ -32,7 +32,7 @@ async function getId(url) {
     tagsVideo = document.createElement('div')
     tagsVideo.textContent = videoClicked[0].tags
     tagsVideo.style.color = 'blue'
-    tagsVideo.style.fontSize = '12px'
+    tagsVideo.style.fontSize = '14px'
     
     holder.replaceChildren()
     holder.append(sourceUrl)
@@ -65,8 +65,8 @@ async function getId(url) {
 
       source = document.createElement('source');
       source.setAttribute('type', 'video/mp4');
-      if (url == 'https://api.rule34.xxx/index.php?api_key=' + api_key + '&user_id=2995454&page=dapi&s=post&q=index&id=8699761&json=1&is=fobs') {
-        source.setAttribute('src', 'https://cdn.discordapp.com/attachments/1204985147565281340/1468234097099804703/d089ceedfc50cd60968ffab6070add161620297121-640-360-391-h264.mp4?ex=6984988f&is=6983470f&hm=3084af0050e400131c4046166a8fb5cb17c28ebfdaaca82e8643f4a25f7c3301&')
+      if (url.endsWith('is=fobs')) {
+        source.setAttribute('src', 'https://us-cdn09-prem.boomio-cdn.com/remote_control.php?file=kMOLEpJgMpKXFvdnJfeZ5kVVzM97v9o1IYe_HtTKbuIt8pfjQHvGPzSuRYop2NApoJwkgyS1tHXiX3ro6vM9vyeZXUZWxYP0qKlkGIj_6dwGBmLLReSk9huHUK9hD5TxVC2RiWdeGjgLJX-2anDOIzdTysLYWGpKpaKJHCgA6U7iumkAogQKHp3PY5kC5mRE2pbcME4VcJBVwwCR0oDCVkYj99UDdA.mp4&acctoken=ZTZkNzA2YTNlMzRjNzllZjk0ZDdmMGVhNDlkZTJlMzhmMjc1ODYwMGQzOTk0MzVjMGU5ZGU0MjUyY2I2MGFlZXwxNzc0MzgxOTY4fDI4NTAwMHxydWxlMzR2aWRlby5jb218MHx8NDg1MTVhODMxYmUzMWQzMDM2NGEzM2VhNzM3MDJhNGE')
       }
       else {
         source.setAttribute('src', videoClicked[0].file_url);
@@ -95,7 +95,6 @@ async function getId(url) {
     }
 
   } catch (e) {
-    holder = document.getElementById('playerHolder')
     let textErr = document.createTextNode("[Connection Error] Either api is down or you are having connection issues, Try again later")
     holder.replaceChildren(textErr)
     
@@ -211,10 +210,11 @@ input.addEventListener('keyup', function(e){
 
 
 if (videoUrl.searchParams.has('id')) {
-  let url = 'https://api.rule34.xxx/index.php?api_key=' + api_key + '&user_id=2995454&page=dapi&s=post&q=index&id=' + videoUrl.searchParams.get('id') + '&json=1'
+  let url = 'https://api.rule34.xxx/index.php?' + api_key + '&page=dapi&s=post&q=index&id=' + videoUrl.searchParams.get('id') + '&json=1'
   getId(url)
 }
 else { 
-  let url = 'https://api.rule34.xxx/index.php?api_key=' + api_key + '&user_id=2995454&page=dapi&s=post&q=index&id=8699761&json=1&is=fobs'
+  let url = 'https://api.rule34.xxx/index.php?' + api_key + '&page=dapi&s=post&q=index&id=8699761&json=1&is=fobs'
   getId(url)
 }
+//as

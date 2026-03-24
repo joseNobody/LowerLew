@@ -1,16 +1,25 @@
-version = "3.1"
+version = "4.0"
 console.log('hey!')
 console.log("Version: " + version)
 
-api_key = "no key for you! hehe"
+api_key = "idk"
 videoUrl = new URL(window.location.href);
-if (videoUrl.searchParams.has('api')) {
-  api_key = videoUrl.searchParams.get('api')
+if (localStorage.getItem("api_key")) {
+  api_key = localStorage.getItem("api_key")
 }
 sizeButton = window.innerWidth / 3.26
 sizeImage = window.innerWidth / 3.47
 
+
+
+isSearching = false
+
 async function search(web, tag, quantity) {
+  if (isSearching) {
+    console.log("[Search Canceled]: already searching.")
+    return;
+  }
+  isSearching = true
   console.clear()
   console.log("Version: " + version)
   videoUrl.searchParams.set("tags", tag)
@@ -22,7 +31,7 @@ async function search(web, tag, quantity) {
   else {
      tags = tags + "+sort:score:desc"
   }
-  let url = "https://api.rule34.xxx/index.php?api_key=" + api_key + "&user_id=2995454&page=dapi&s=post&q=index&limit="+ quantity +"&tags="+ tags +"&json=1"
+  let url = "https://api.rule34.xxx/index.php?" + api_key + "&page=dapi&s=post&q=index&limit="+ quantity +"&tags="+ tags +"&json=1"
   const container = document.getElementById('images');
   const loading = document.createElement('img')
   loading.src = "images/Loading.gif"
@@ -31,6 +40,7 @@ async function search(web, tag, quantity) {
   try {
     let resp = await fetch(url)
     let json = await resp.json()
+    console.log(json)
     container.replaceChildren();
     json.forEach((i, inde) => {
       console.log("==== [" + (inde + 1) +"] ====" )
@@ -43,7 +53,7 @@ async function search(web, tag, quantity) {
       async function clickB() {
         sessionStorage.setItem('current_search', tag);
         console.log("hey noob: " + i.file_url)
-        window.location.href = "player.html?api=" + api_key + "&tags=" + tag.replaceAll(" ","+") + "&id=" + i.id
+        window.location.href = "player.html?tags=" + tag.replaceAll(" ","+") + "&id=" + i.id
         
         
       }
@@ -57,17 +67,27 @@ async function search(web, tag, quantity) {
         var imgPlay = document.createElement("img")
         imgPlay.src = 'images/isVideoPreview.png'
         imgPlay.style.height = 20
-        imgPlay.style.width = 20
+        imgPlay.style.width = 40
+        btn.appendChild(imgPlay)
+        imgPlay.style.visibility = 'visible'
+      }
+      if (i.file_url.endsWith(".gif")) {
+        var imgPlay = document.createElement("img")
+        imgPlay.src = 'images/isGifPreview.png'
+        imgPlay.style.height = 20
+        imgPlay.style.width = 40
         btn.appendChild(imgPlay)
         imgPlay.style.visibility = 'visible'
       }
       body.appendChild(btn);
       img.style.visibility = 'visible'
     })
+    isSearching = false
   }
   catch (e){
-    const erro = document.createTextNode("Error: invalid tags or api unreachable.")
+    const erro = document.createTextNode("[Connection Error]: invalid tags or api unreachable.")
     container.replaceChildren(erro)
+    isSearching = false
     throw e
   
   }
@@ -159,7 +179,7 @@ if (btn) {
       pages.value = 18
     }
     sessionStorage.setItem('pages',pages.value)
-    console.log("input: " + input.value)
+    console.log("Searching for: " + input.value)
     search("r34",input.value,pages.value)
   }
   input.addEventListener('keyup', function(e){
@@ -186,3 +206,73 @@ async function randomState() {
 if (sessionStorage.getItem('random')) {
   randomBtn.style.backgroundColor = "green"
 }
+
+
+if (!localStorage.getItem("api_key")) {
+  const body = document.getElementById("my-content");
+  text = document.createTextNode("To use this website you need to get your api key from ")
+  textUrl = document.createElement("a")
+  textUrl.href = "https://rule34.xxx/index.php?page=account&s=options"
+  textUrl.textContent = "Rule 34"
+  text2 = document.createTextNode(', check the option "Generate New Key?", press save, go back to "API Access Credentials", copy everything in the text box and paste it bellow:')
+  
+  inputHolder = document.createElement('div')
+  const input_api = document.createElement("textarea")
+  input_api.placeholder = "paste api key here"
+  input_api.style.height = '100px'
+  input_api.style.width = "300px"
+  input_api.style
+  input_api.id = "api"
+  inputHolder.appendChild(input_api)
+  
+  outputHolder = document.createElement('div')
+  outputText = document.createTextNode("")
+  outputHolder.appendChild(outputText)
+  
+  
+  saveHolder = document.createElement("div")
+  const save_btn = document.createElement("button")
+  save_btn.textContent = "save"
+  save_btn.style.height = "25px"
+  save_btn.style.width = "50px"
+  saveHolder.appendChild(save_btn)
+  
+  body.appendChild(text)
+  body.appendChild(textUrl)
+  body.appendChild(text2)
+  body.appendChild(inputHolder)
+  body.appendChild(saveHolder)
+  body.appendChild(outputHolder)
+  
+  
+  save_btn.addEventListener('click', saveApi)
+  async function saveApi() {
+    outputText.textContent = "Checking if API Key is valid..."
+    let url = "https://api.rule34.xxx/index.php?" + input_api.value + "&page=dapi&s=post&q=index&limit=1&tags=test&json=1"
+    try {
+      console.log("Checking API Key...")
+      let resp = await fetch(url)
+      let json = await resp.json()
+      if (!json[0].file_url) {
+        console.log(json)
+        outputText.textContent = "[API Error] Api key is invalid."
+      }
+      else {
+        console.log("API key is valid.")
+        localStorage.setItem("api_key", input_api.value)
+        outputText.textContent = "Saved!"
+        setTimeout(function() {
+          window.location.reload()
+        }, 5000)
+      }
+    }
+    catch (e) {
+      console.log("error")
+      outputText.textContent = "[Connection Error] Either api is down or you are having connection issues, Try again later"
+      throw e
+    }
+  }
+}
+//a
+
+
