@@ -2,6 +2,7 @@
 var obj,
   source;
 
+// api key thing
 api_key = ""
 videoUrl = new URL(window.location.href);
 if (localStorage.getItem("api_key")) {
@@ -10,6 +11,7 @@ if (localStorage.getItem("api_key")) {
 var videoClicked
 
 const holder = document.getElementById('playerHolder')
+// function to get image/video url and embed it
 async function getId(url) {
   try {
     const loading = document.createElement('img')
@@ -98,7 +100,8 @@ async function getId(url) {
     let textErr = document.createTextNode("[Connection Error] Either api is down or you are having connection issues, Try again later")
     holder.replaceChildren(textErr)
     
-    console.log("oh noes: " + e)
+    console.log("oh noes: ")
+    throw(e)
   }
 }
   
@@ -203,7 +206,7 @@ input.addEventListener('keyup', function(e){
   async function searchBtn() {
     videoUrl.searchParams.set("tags", input.value);
     sessionStorage.setItem('pages', pages.value)
-    window.location.href = "./?api=" + api_key + "&tags=" + videoUrl.searchParams.get('tags')
+    window.location.href = "./?tags=" + videoUrl.searchParams.get('tags')
   }
 
 
@@ -217,4 +220,3 @@ else {
   let url = 'https://api.rule34.xxx/index.php?' + api_key + '&page=dapi&s=post&q=index&id=8699761&json=1&is=fobs'
   getId(url)
 }
-//as
