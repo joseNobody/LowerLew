@@ -1,4 +1,4 @@
-version = "4.1"
+version = "4.2"
 console.log('hey!')
 console.log("Version: " + version)
 
