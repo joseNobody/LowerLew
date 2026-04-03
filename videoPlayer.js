@@ -18,16 +18,30 @@ async function getId(url) {
     loading.src = "images/Loading.gif"
     loading.width = 120
     holder.insertBefore(loading, holder.firstChild)
-    let resp = await fetch(url)
-    let videoClicked = await resp.json()
-    console.log(videoClicked[0])
+    videoClicked = []
+    if (url.startsWith("https://api.rule34")) {
+      let resp = await fetch(url)
+       videoClicked = await resp.json()
+      console.log(videoClicked)
+    }
+    else {
+      videoClicked.push({is_custom: true, tags: "very cool tags (no tags)", comment_count: -1, file_url: "video.mp4", preview_url: "images/noThumb.png"})
+      console.log(videoClicked)
+    }
+    
     
     sourceUrl = document.createTextNode("Source: ")
     sourceUrl2 = document.createElement("a")
-    sourceUrl2.href = "https://rule34.xxx/index.php?page=post&s=view&id=" + videoClicked[0].id
-    sourceUrl2.textContent = "Rule 34 "
-    comments = document.createTextNode('Comments: ' + videoClicked[0].comment_count)
-
+    if (!videoClicked[0].is_custom){
+      sourceUrl2.href = "https://rule34.xxx/index.php?page=post&s=view&id=" + videoClicked[0].id
+      sourceUrl2.textContent = "Rule 34"
+    }
+    else {
+      sourceUrl2.href = url
+      sourceUrl2.textContent = "Video Link"
+    } 
+    comments = document.createTextNode(' Comments: ' + videoClicked[0].comment_count)
+    
     tagsTitle = document.createElement('div')
     tagsTitle.textContent = ' Tags'
 
@@ -51,6 +65,10 @@ async function getId(url) {
     
     
     if (videoClicked[0].file_url.endsWith(".mp4")) {
+      file_url = videoClicked[0].file_url
+      if (videoClicked[0].is_custom) {
+        file_url = url
+      }
       console.log("current: video player")
       obj = document.createElement('video'); 
       obj.setAttribute('id', 'video-player'); 
@@ -67,12 +85,7 @@ async function getId(url) {
 
       source = document.createElement('source');
       source.setAttribute('type', 'video/mp4');
-      if (url.endsWith('is=fobs')) {
-        source.setAttribute('src', 'https://us-cdn09-prem.boomio-cdn.com/remote_control.php?file=kMOLEpJgMpKXFvdnJfeZ5kVVzM97v9o1IYe_HtTKbuIt8pfjQHvGPzSuRYop2NApoJwkgyS1tHXiX3ro6vM9vyeZXUZWxYP0qKlkGIj_6dwGBmLLReSk9huHUK9hD5TxVC2RiWdeGjgLJX-2anDOIzdTysLYWGpKpaKJHCgA6U7iumkAogQKHp3PY5kC5mRE2pbcME4VcJBVwwCR0oDCVkYj99UDdA.mp4&acctoken=ZTZkNzA2YTNlMzRjNzllZjk0ZDdmMGVhNDlkZTJlMzhmMjc1ODYwMGQzOTk0MzVjMGU5ZGU0MjUyY2I2MGFlZXwxNzc0MzgxOTY4fDI4NTAwMHxydWxlMzR2aWRlby5jb218MHx8NDg1MTVhODMxYmUzMWQzMDM2NGEzM2VhNzM3MDJhNGE')
-      }
-      else {
-        source.setAttribute('src', videoClicked[0].file_url);
-      }
+      source.setAttribute('src', file_url);
       
       
 
@@ -216,7 +229,10 @@ if (videoUrl.searchParams.has('id')) {
   let url = 'https://api.rule34.xxx/index.php?' + api_key + '&page=dapi&s=post&q=index&id=' + videoUrl.searchParams.get('id') + '&json=1'
   getId(url)
 }
+else if (videoUrl.searchParams.has('url')) {
+  getId(videoUrl.searchParams.get('url'))
+}
 else { 
-  let url = 'https://api.rule34.xxx/index.php?' + api_key + '&page=dapi&s=post&q=index&id=8699761&json=1&is=fobs'
+  let url = 'https://us-cdn09-prem.boomio-cdn.com/remote_control.php?file=kMOLEpJgMpKXFvdnJfeZ5kVVzM97v9o1IYe_HtTKbuIt8pfjQHvGPzSuRYop2NApoJwkgyS1tHXiX3ro6vM9vyeZXUZWxYP0qKlkGIj_6dwGBmLLReSk9huHUK9hD5TxVC2RiWdeGjgLJX-2anDOIzdTysLYWGpKpaKJHCgA6U7iumkAogQKHp3PY5kC5mRE2pbcME4VcJBVwwCR0oDCVkYj99UDdA.mp4&acctoken=ZTZkNzA2YTNlMzRjNzllZjk0ZDdmMGVhNDlkZTJlMzhmMjc1ODYwMGQzOTk0MzVjMGU5ZGU0MjUyY2I2MGFlZXwxNzc0MzgxOTY4fDI4NTAwMHxydWxlMzR2aWRlby5jb218MHx8NDg1MTVhODMxYmUzMWQzMDM2NGEzM2VhNzM3MDJhNGE'
   getId(url)
 }
