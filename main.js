@@ -265,7 +265,7 @@ if (!localStorage.getItem("api_key")) {
         outputText.textContent = "Saved!"
         setTimeout(function() {
           window.location.reload()
-        }, 3000)
+        }, 1500)
       }
     }
     catch (e) {
