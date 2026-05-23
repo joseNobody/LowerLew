@@ -115,13 +115,12 @@ if (videoUrl.searchParams.get('tags')) {
   let current_search = videoUrl.searchParams.get('tags')
   current_search.replaceAll("+", " ")
   input.value = current_search
-}
-
-if (sessionStorage.getItem('pages')) {
+  
+  
   let current_pages = sessionStorage.getItem('pages')
   pages.value = current_pages
-  if (pages.value < 18) {
-      pages.value = 18
+  if (pages.value < 30) {
+      pages.value = 30
     }
   setTimeout(function() {
     search("r34", input.value, pages.value)
@@ -177,8 +176,8 @@ document.addEventListener('click', function(event) {
 if (btn) {  
   btn.addEventListener('click', searchBar)
   async function searchBar() {
-    if (pages.value < 18) {
-      pages.value = 18
+    if (pages.value < 30) {
+      pages.value = 30
     }
     sessionStorage.setItem('pages',pages.value)
     console.log("Searching for: " + input.value)
