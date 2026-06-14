@@ -10,6 +10,46 @@ if (localStorage.getItem("api_key")) {
 }
 var videoClicked
 
+async function addFavorite(id) {
+  id = String(id)
+  if (!id) {
+    console.log("[Error] Invalid id")
+    return
+  }
+  favoritesList = new Array
+  if (localStorage.getItem("favorites")) {
+    favoritesList = localStorage.getItem("favorites").split(" ")
+  }
+  if (!favoritesList.includes(id)) {
+    favoritesList.unshift(id)
+    localStorage.setItem("favorites", favoritesList.join(" "))
+    console.log(`[Favorites] "${id}" was added to Favorites`)
+  }
+  else {
+    console.log(`[Error] "${id}" is already in Favorites`)
+  }
+}
+
+async function removeFavorite(id) {
+  id = String(id)
+  favoritesList = new Array
+  if (localStorage.getItem("favorites")) {
+    favoritesList = localStorage.getItem("favorites").split(" ")
+  }
+  index = favoritesList.indexOf(id)
+  if (favoritesList.includes(id) && index > -1) {
+    favoritesList.splice(index, 1)
+    localStorage.setItem("favorites", favoritesList.join(" "))
+    if (localStorage.getItem("favorites") === "") {
+      localStorage.removeItem("favorites")
+    }
+    console.log(`[Favorites] "${id}" was removed from Favorites`)
+  }
+  else {
+    console.log(`[Error] "${id}" is not in Favorites`)
+  }
+}
+
 const holder = document.getElementById('playerHolder')
 // function to get image/video url and embed it
 async function getId(url) {
@@ -40,7 +80,41 @@ async function getId(url) {
       sourceUrl2.href = url
       sourceUrl2.textContent = "Video Link"
     } 
-    comments = document.createTextNode(' Comments: ' + videoClicked[0].comment_count)
+    comments = document.createTextNode(' Comments: ' + videoClicked[0].comment_count + "  ")
+    
+    favBtn = document.createElement("button")
+    favoriteBtn = document.createElement("img")
+    favoriteBtn.src = 'images/favoriteButton.png'
+    favoriteBtn.style.height = 16
+    favoriteBtn.style.width = 16
+    favoriteBtn.style.visibility = 'visible'
+    favBtn.appendChild(favoriteBtn)
+    
+    //----- Check if is already favorite
+    let isFavorited = false
+    if (localStorage.getItem("favorites")) {
+      favoritesList = localStorage.getItem("favorites").split(" ")
+      if (favoritesList.includes(String(videoClicked[0].id))) {
+        isFavorited = true
+        favoriteBtn.src = 'images/favoritedButton.png'
+      }
+    }
+    //------- end of check
+    
+    favBtn.addEventListener('click', favB)
+    async function favB() {
+      if (!isFavorited) {
+        isFavorited = true
+        favoriteBtn.src = 'images/favoritedButton.png'
+        addFavorite(videoClicked[0].id)
+      }
+      else {
+        isFavorited = false
+        favoriteBtn.src = 'images/favoriteButton.png'
+        removeFavorite(videoClicked[0].id)
+      }
+      
+    }
     
     tagsTitle = document.createElement('div')
     tagsTitle.textContent = ' Tags'
@@ -54,6 +128,7 @@ async function getId(url) {
     holder.append(sourceUrl)
     holder.append(sourceUrl2)
     holder.append(comments)
+    holder.append(favBtn)
 
     const tagsBox = document.createElement('div'); 
     tagsBox.classList.add = 'tags-box';
@@ -216,11 +291,11 @@ input.addEventListener('keyup', function(e){
     }
   })
 
-  async function searchBtn() {
-    videoUrl.searchParams.set("tags", input.value);
-    sessionStorage.setItem('pages', pages.value)
-    window.location.href = "./?tags=" + videoUrl.searchParams.get('tags')
-  }
+async function searchBtn() {
+  videoUrl.searchParams.set("tags", input.value);
+  sessionStorage.setItem('pages', pages.value)
+  window.location.href = "./?tags=" + videoUrl.searchParams.get('tags')
+}
 
 
 
