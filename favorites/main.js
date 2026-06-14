@@ -7,6 +7,13 @@ baseTag.href = window.location.origin + '/';
 document.head.prepend(baseTag);
 
 
+const suggestionsBox = document.getElementById('suggestionsBox');
+const input = document.getElementById('my-input')
+const btn = document.getElementById('my-button')
+const randomBtn = document.getElementById('randomBtn')
+const pages = document.getElementById("pages")
+
+
 
 //api key thing
 api_key = "idk"
@@ -52,9 +59,8 @@ async function viewFav(web) {
       btn.style.width = sizeButton
       btn.addEventListener('click', clickB)
       async function clickB() {
-        sessionStorage.setItem('current_search', tag);
         console.log("clicked video url: " + json[0].file_url)
-        window.location.href = "player.html?tags=" + tag.replaceAll(" ","+") + "&id=" + json[0].id
+        window.location.href = "player.html?tags=" + input.value.replaceAll(" ","+") + "&id=" + json[0].id
         
         
       }
@@ -96,11 +102,6 @@ setTimeout(function() {
 },100)
   
 
-const suggestionsBox = document.getElementById('suggestionsBox');
-const input = document.getElementById('my-input')
-const btn = document.getElementById('my-button')
-const randomBtn = document.getElementById('randomBtn')
-const pages = document.getElementById("pages")
 
 
 pages.style.width = window.innerWidth / 13.5
