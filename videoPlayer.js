@@ -12,7 +12,7 @@ var videoClicked
 
 async function addFavorite(id) {
   id = String(id)
-  if (!id) {
+  if (!id || id === "undefined") {
     console.log("[Error] Invalid id")
     return
   }
