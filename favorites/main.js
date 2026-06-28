@@ -1,4 +1,4 @@
-version = "4.2"
+version = "4.3"
 console.log('hey!')
 console.log("Version: " + version)
 
@@ -46,12 +46,21 @@ async function viewFav(web) {
     container.replaceChildren(erro)
     return
   }
+  console.log("[Favorites] total of " + favoritesList.length + " favorites!")
   for (const [inde, i] of favoritesList.entries()) {
     try {
-      let resp = await fetch(url + i)
-      let json = await resp.json()
+      let json = []
+      if (!i.startsWith("https://")) {
+        let resp = await fetch(url + i)
+        json = await resp.json()
+      }
+      else {
+        json.push({ is_custom: true, id: i, tags: "very cool tags (no tags)", comment_count: -1, file_url: "video.mp4", preview_url: "images/noThumb.png" })
+      }
+      
       console.log("==== [" + (inde + 1) +"] ====")
       console.log(json[0])
+      console.log("i = " + i)
       
       var btn = document.createElement("button")
       btn.style.visibility = 'hidden'
@@ -60,8 +69,12 @@ async function viewFav(web) {
       btn.addEventListener('click', clickB)
       async function clickB() {
         console.log("clicked video url: " + json[0].file_url)
+        if (json[0].is_custom) {
+          window.location.href = "player.html?tags=" + input.value.replaceAll(" ","+") + "&url=" + json[0].id
+        }
+        else {
         window.location.href = "player.html?tags=" + input.value.replaceAll(" ","+") + "&id=" + json[0].id
-        
+        }
         
       }
       var img = document.createElement("img");

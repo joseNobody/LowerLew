@@ -10,13 +10,17 @@ if (localStorage.getItem("api_key")) {
 }
 var videoClicked
 
+//------------ functions ----------
+
+//------- Favorites
+
 async function addFavorite(id) {
   id = String(id)
   if (!id || id === "undefined") {
     console.log("[Error] Invalid id")
     return
   }
-  favoritesList = new Array
+  favoritesList = new Array()
   if (localStorage.getItem("favorites")) {
     favoritesList = localStorage.getItem("favorites").split(" ")
   }
@@ -50,6 +54,9 @@ async function removeFavorite(id) {
   }
 }
 
+
+
+
 const holder = document.getElementById('playerHolder')
 // function to get image/video url and embed it
 async function getId(url) {
@@ -61,11 +68,11 @@ async function getId(url) {
     videoClicked = []
     if (url.startsWith("https://api.rule34")) {
       let resp = await fetch(url)
-       videoClicked = await resp.json()
+      videoClicked = await resp.json()
       console.log(videoClicked)
     }
     else {
-      videoClicked.push({is_custom: true, tags: "very cool tags (no tags)", comment_count: -1, file_url: "video.mp4", preview_url: "images/noThumb.png"})
+      videoClicked.push({is_custom: true, id: url,  tags: "very cool tags (no tags)", comment_count: -1, file_url: "video.mp4", preview_url: "images/noThumb.png"})
       console.log(videoClicked)
     }
     
@@ -103,7 +110,7 @@ async function getId(url) {
     
     favBtn.addEventListener('click', favB)
     async function favB() {
-      if (!isFavorited) {
+      if ((!isFavorited) && (videoClicked[0].id != undefined)) {
         isFavorited = true
         favoriteBtn.src = 'images/favoritedButton.png'
         addFavorite(videoClicked[0].id)
@@ -305,9 +312,13 @@ if (videoUrl.searchParams.has('id')) {
   getId(url)
 }
 else if (videoUrl.searchParams.has('url')) {
-  getId(videoUrl.searchParams.get('url'))
+  url = window.location.href
+  url = url.split("url=").pop();
+  console.log(url)
+  getId(url)
 }
 else { 
   let url = 'https://us-cdn09-prem.boomio-cdn.com/remote_control.php?file=kMOLEpJgMpKXFvdnJfeZ5kVVzM97v9o1IYe_HtTKbuIt8pfjQHvGPzSuRYop2NApoJwkgyS1tHXiX3ro6vM9vyeZXUZWxYP0qKlkGIj_6dwGBmLLReSk9huHUK9hD5TxVC2RiWdeGjgLJX-2anDOIzdTysLYWGpKpaKJHCgA6U7iumkAogQKHp3PY5kC5mRE2pbcME4VcJBVwwCR0oDCVkYj99UDdA.mp4&acctoken=ZTZkNzA2YTNlMzRjNzllZjk0ZDdmMGVhNDlkZTJlMzhmMjc1ODYwMGQzOTk0MzVjMGU5ZGU0MjUyY2I2MGFlZXwxNzc0MzgxOTY4fDI4NTAwMHxydWxlMzR2aWRlby5jb218MHx8NDg1MTVhODMxYmUzMWQzMDM2NGEzM2VhNzM3MDJhNGE'
   getId(url)
 }
+

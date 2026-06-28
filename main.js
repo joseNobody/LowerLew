@@ -1,4 +1,4 @@
-version = "4.2"
+version = "4.3"
 console.log('hey!')
 console.log("Version: " + version)
 
@@ -228,7 +228,6 @@ if (!localStorage.getItem("api_key")) {
   
   outputHolder = document.createElement('div')
   outputText = document.createTextNode("")
-  outputHolder.appendChild(outputText)
   
   
   saveHolder = document.createElement("div")
@@ -248,14 +247,23 @@ if (!localStorage.getItem("api_key")) {
   
   save_btn.addEventListener('click', saveApi)
   async function saveApi() {
+    outputHolder.innerHTML = ""
+    outputHolder.appendChild(outputText)
+    
     outputText.textContent = "Checking if API Key is valid..."
     let url = "https://api.rule34.xxx/index.php?" + input_api.value + "&page=dapi&s=post&q=index&limit=1&tags=test&json=1"
     try {
       console.log("Checking API Key...")
+      if (input_api.value.replaceAll(" ", "") === "&api_key=&user_id=2") {
+        console.log("└ Needs to login into account first.")
+        outputHolder.innerHTML = '[API error] you need to login in your account first at <a href="https://rule34.xxx/index.php?page=account&s=login&code=00" target="_blank">Rule 34</a> first and then repeat the first steps';
+        return;
+      }
       let resp = await fetch(url)
       let json = await resp.json()
       if (!json[0].file_url) {
-        console.log(json)
+        console.log("└ json response: ")
+        console.loading(json)
         outputText.textContent = "[API Error] Api key is invalid."
       }
       else {
@@ -268,7 +276,7 @@ if (!localStorage.getItem("api_key")) {
       }
     }
     catch (e) {
-      console.log("error")
+      console.log("└ Error:")
       outputText.textContent = "[Connection Error] Either api is down or you are having connection issues, Try again later"
       throw e
     }
