@@ -28,6 +28,16 @@
   background-color: rgba(181, 239, 173, 255);
   width: calc(100% * 0.97);
   z-index: 10
+}
+
+#moreBox {
+  border: 1px solid #000000;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  background-color: rgba(181, 239, 173, 255);
+  width: calc(100% * 0.50);
+  z-index: 10
   
 }
 
