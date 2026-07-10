@@ -301,7 +301,7 @@ input.addEventListener('keyup', function(e){
 async function searchBtn() {
   videoUrl.searchParams.set("tags", input.value);
   sessionStorage.setItem('pages', pages.value)
-  window.location.href = "./?tags=" + videoUrl.searchParams.get('tags')
+  window.location.href = "./?tags=" + videoUrl.searchParams.get('tags') + "&sortBy=" + videoUrl.searchParams.get('sortBy')
 }
 
 

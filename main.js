@@ -1,8 +1,8 @@
-version = "4.3"
+version = "4.5"
 console.log('hey!')
 console.log("Version: " + version)
 
-//api key thing
+//api key thingy
 api_key = "idk"
 videoUrl = new URL(window.location.href);
 if (localStorage.getItem("api_key")) {
@@ -27,12 +27,31 @@ async function search(web, tag, quantity) {
   videoUrl.searchParams.set("tags", tag)
   tags = tag.replaceAll(" ","+")
   history.pushState({}, '', videoUrl.href)
-  if (sessionStorage.getItem('random')) {
-    tags = tags + "+sort:random+score:>25"
+  //------ more sorting types instead of just random
+  switch (videoUrl.searchParams.get('sortBy')) {
+    case "random":
+      tags = tags + "+sort:random"
+      break;
+    case "score":
+      tags = tags + "+sort:score:desc"
+      break;
+    case "new":
+      tags = tags + "+sort:id:desc"
+      break;
+    case "old":
+      tags = tags + "+sort:id:asc"
+      break;
+    case "updated": // idk if this is useful but I will add anyway
+      tags = tags + "+sort:updated:desc"
+      break;
+    default:
+      tags = tags + "+sort:score:desc"
+      videoUrl.searchParams.set('sortBy', 'score')
+      break;
   }
-  else {
-     tags = tags + "+sort:score:desc"
-  }
+  tags = tags + "+score:>25"
+  
+  
   let url = "https://api.rule34.xxx/index.php?" + api_key + "&page=dapi&s=post&q=index&limit="+ quantity +"&tags="+ tags +"&json=1"
   const container = document.getElementById('images');
   const loading = document.createElement('img')
@@ -55,7 +74,7 @@ async function search(web, tag, quantity) {
       async function clickB() {
         sessionStorage.setItem('current_search', tag);
         console.log("clicked video url: " + i.file_url)
-        window.location.href = "player.html?tags=" + tag.replaceAll(" ","+") + "&id=" + i.id
+        window.location.href = "player.html?tags=" + tag.replaceAll(" ","+") + "&sortBy=" + videoUrl.searchParams.get('sortBy') + "&id=" + i.id
         
         
       }
@@ -191,21 +210,26 @@ if (btn) {
     }
   })
 }
+
+// will change this to a sort menu later (probably if i don't forget )
 randomBtn.addEventListener('click', randomState)
 async function randomState() {
   if (sessionStorage.getItem('random')) {
     sessionStorage.removeItem('random')
     randomBtn.style.backgroundColor = "white"
+    videoUrl.searchParams.set("sortBy", "score")
   }
   else {
     sessionStorage.setItem('random', true)
     randomBtn.style.backgroundColor = "green"
+    videoUrl.searchParams.set("sortBy", "random")
   }
 }
 
 
 if (sessionStorage.getItem('random')) {
   randomBtn.style.backgroundColor = "green"
+  videoUrl.searchParams.set("sortBy", "random")
 }
 
 
