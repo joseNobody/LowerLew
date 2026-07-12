@@ -25,7 +25,7 @@ async function search(web, tag, quantity) {
   console.clear()
   console.log("Version: " + version)
   videoUrl.searchParams.set("tags", tag)
-  tags = tag.replaceAll(" ","+")
+  tags = tag.replaceAll(" ","+") ?? ""
   history.pushState({}, '', videoUrl.href)
   //------ more sorting types instead of just random
   switch (videoUrl.searchParams.get('sortBy')) {
@@ -43,6 +43,8 @@ async function search(web, tag, quantity) {
       break;
     case "updated": // idk if this is useful but I will add anyway
       tags = tags + "+sort:updated:desc"
+      break;
+    case "none":
       break;
     default:
       tags = tags + "+sort:score:desc"
