@@ -1,4 +1,4 @@
-version = "4.5"
+version = "4.6"
 console.log('hey!')
 console.log("Version: " + version)
 
@@ -25,10 +25,11 @@ async function search(web, tag, quantity) {
   console.clear()
   console.log("Version: " + version)
   videoUrl.searchParams.set("tags", tag)
-  tags = tag.replaceAll(" ","+")
+  tags = tag.replaceAll(" ","+") ?? ""
   history.pushState({}, '', videoUrl.href)
   //------ more sorting types instead of just random
-  switch (videoUrl.searchParams.get('sortBy')) {
+  sortBy = videoUrl.searchParams.get("sortBy")
+  switch (sortBy) {
     case "random":
       tags = tags + "+sort:random"
       break;
@@ -37,16 +38,25 @@ async function search(web, tag, quantity) {
       break;
     case "new":
       tags = tags + "+sort:id:desc"
+      randomBtn.style.backgroundColor = "orange"
+      randomBtn.textContent = "New"
       break;
     case "old":
       tags = tags + "+sort:id:asc"
+      randomBtn.style.backgroundColor = "orange"
+      randomBtn.textContent = "Old"
       break;
     case "updated": // idk if this is useful but I will add anyway
       tags = tags + "+sort:updated:desc"
+      randomBtn.style.backgroundColor = "orange"
+      randomBtn.textContent = "Updated"
+      break;
+    case "none": // to use your own rule34 sorting
       break;
     default:
       tags = tags + "+sort:score:desc"
       videoUrl.searchParams.set('sortBy', 'score')
+      randomBtn.textContent = "Random"
       break;
   }
   tags = tags + "+score:>25"
@@ -79,25 +89,23 @@ async function search(web, tag, quantity) {
         
       }
       var img = document.createElement("img");
+      img.setAttribute('loading', 'lazy')
       img.style.maxHeight = sizeImage
       img.style.maxWidth = sizeImage
       img.src = i.preview_url;
       var body = document.getElementById("images");
       btn.appendChild(img)
+      var imgPlay = document.createElement("img")
+      imgPlay.style.height = 20
+      imgPlay.style.width = 40
+      imgPlay.style.visibility = 'invisible'
+      btn.appendChild(imgPlay)
       if (i.file_url.endsWith(".mp4")) {
-        var imgPlay = document.createElement("img")
         imgPlay.src = 'images/isVideoPreview.png'
-        imgPlay.style.height = 20
-        imgPlay.style.width = 40
-        btn.appendChild(imgPlay)
         imgPlay.style.visibility = 'visible'
       }
       if (i.file_url.endsWith(".gif")) {
-        var imgPlay = document.createElement("img")
         imgPlay.src = 'images/isGifPreview.png'
-        imgPlay.style.height = 20
-        imgPlay.style.width = 40
-        btn.appendChild(imgPlay)
         imgPlay.style.visibility = 'visible'
       }
       body.appendChild(btn);
@@ -128,6 +136,7 @@ pages.style.height = window.innerHeight / 36
 input.style.height = window.innerHeight / 36
 btn.style.height = window.innerHeight / 36
 randomBtn.style.height = window.innerHeight / 36
+randomBtn.style.minWidth = '61px'
 
 
 if (videoUrl.searchParams.get('tags')) {
@@ -287,7 +296,7 @@ if (!localStorage.getItem("api_key")) {
       let json = await resp.json()
       if (!json[0].file_url) {
         console.log("└ json response: ")
-        console.loading(json)
+        console.log(json)
         outputText.textContent = "[API Error] Api key is invalid."
       }
       else {

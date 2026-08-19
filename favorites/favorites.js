@@ -1,4 +1,4 @@
-version = "4.5"
+version = "4.6"
 console.log('hey!')
 console.log("Version: " + version)
 
@@ -28,7 +28,7 @@ sizeImage = window.innerWidth / 3.47
 
 isSearching = false
 
-// Favorite tab (probably breaks if using custom url instead)
+// Favorite tab 
 async function viewFav(web) {
   let url = "https://api.rule34.xxx/index.php?" + api_key + "&page=dapi&s=post&q=index&limit=1=&json=1&id="
   const container = document.getElementById('images');

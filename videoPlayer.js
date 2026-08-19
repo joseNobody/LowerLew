@@ -12,6 +12,29 @@ var videoClicked
 
 //------------ functions ----------
 
+//-------- Tools
+function loop() {
+  videojs('video-player').loop(true)
+  console.log("Looping is now set to True")
+}
+function reload() {
+  if (videoUrl.searchParams.has('id')) {
+    let url = 'https://api.rule34.xxx/index.php?' + api_key + '&page=dapi&s=post&q=index&id=' + videoUrl.searchParams.get('id') + '&json=1'
+    getId(url)
+  }
+  else if (videoUrl.searchParams.has('url')) {
+    url = window.location.href
+    url = url.split("url=").pop();
+    console.log(url)
+    getId(url)
+  }
+  else { 
+    let url = 'https://us-cdn09-prem.boomio-cdn.com/remote_control.php?file=kMOLEpJgMpKXFvdnJfeZ5kVVzM97v9o1IYe_HtTKbuIt8pfjQHvGPzSuRYop2NApoJwkgyS1tHXiX3ro6vM9vyeZXUZWxYP0qKlkGIj_6dwGBmLLReSk9huHUK9hD5TxVC2RiWdeGjgLJX-2anDOIzdTysLYWGpKpaKJHCgA6U7iumkAogQKHp3PY5kC5mRE2pbcME4VcJBVwwCR0oDCVkYj99UDdA.mp4&acctoken=ZTZkNzA2YTNlMzRjNzllZjk0ZDdmMGVhNDlkZTJlMzhmMjc1ODYwMGQzOTk0MzVjMGU5ZGU0MjUyY2I2MGFlZXwxNzc0MzgxOTY4fDI4NTAwMHxydWxlMzR2aWRlby5jb218MHx8NDg1MTVhODMxYmUzMWQzMDM2NGEzM2VhNzM3MDJhNGE'
+    getId(url)
+  }
+  console.log('Reloading Video...')
+}
+
 //------- Favorites
 
 async function addFavorite(id) {
@@ -59,7 +82,7 @@ async function removeFavorite(id) {
 
 const holder = document.getElementById('playerHolder')
 // function to get image/video url and embed it
-async function getId(url) {
+async function getId(url, forceImage = false) {
   try {
     const loading = document.createElement('img')
     loading.src = "images/Loading.gif"
