@@ -61,7 +61,10 @@ async function search(web, tag, quantity) {
       randomBtn.textContent = "Random"
       break;
   }
-  tags = tags + "+score:>25"
+  blackList = localStorage.getItem("blacklist") ?? "+"
+  blackList = blackList.replaceAll(" ", "+-") 
+  console.log("blocked content: " + blackList)
+  tags = tags + "+score:>25+" + blackList
   
   
   let url = "https://api.rule34.xxx/index.php?" + api_key + "&page=dapi&s=post&q=index&limit="+ quantity +"&tags="+ tags +"&json=1"
@@ -240,6 +243,7 @@ async function randomState() {
 
 if (sessionStorage.getItem('random')) {
   randomBtn.style.backgroundColor = "green"
+  randomBtn.textContent = "random"
   videoUrl.searchParams.set("sortBy", "random")
 }
 
