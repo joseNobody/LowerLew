@@ -26,7 +26,8 @@ async function search(web, tag, quantity) {
   console.log("Version: " + version)
   videoUrl.searchParams.set("tags", tag)
   tags = tag.replaceAll(" ","+") ?? ""
-  history.replaceState(null, 'lowerLew', (videoUrl.href.replace("sortby", "sortBy") ?? videoUrl.href))
+  window.history.replaceState(null, 'lowerLew', (videoUrl.href.replace("sortby", "sortBy") ?? videoUrl.href))
+  videoUrl = new URL(window.location.href);
   //------ more sorting types instead of just random
   sortBy = videoUrl.searchParams.get("sortBy") ?? videoUrl.searchParams.get("sortby")
   switch (sortBy) {
@@ -65,8 +66,8 @@ async function search(web, tag, quantity) {
   if (blackList[0] == " ") {
     blackList = blackList.replace(" ", "")
   }
-  blackList = blackList.replaceAll(" ", "+-")
   console.log("blocked content: " + blackList)
+  blackList = blackList.replaceAll(" ", "+-")
   tags = tags + "+score:>25+-" + blackList
   
   
@@ -96,7 +97,6 @@ async function search(web, tag, quantity) {
       btn.style.width = sizeButton
       btn.addEventListener('click', clickB)
       async function clickB() {
-        sessionStorage.setItem('current_search', tag);
         console.log("clicked video url: " + i.file_url)
         window.location.href = "player.html?tags=" + tag.replaceAll(" ","+") + "&sortBy=" + videoUrl.searchParams.get('sortBy') + "&id=" + i.id
         
@@ -107,6 +107,7 @@ async function search(web, tag, quantity) {
       img.style.maxHeight = sizeImage
       img.style.maxWidth = sizeImage
       img.src = i.preview_url;
+      img.setAttribute("href", "player.html?id=" + i.id)
       var body = document.getElementById("images");
       btn.appendChild(img)
       var imgPlay = document.createElement("img")
