@@ -1,4 +1,4 @@
-version = "4.6"
+version = "4.7"
 console.log('hey!')
 console.log("Version: " + version)
 
@@ -26,9 +26,9 @@ async function search(web, tag, quantity) {
   console.log("Version: " + version)
   videoUrl.searchParams.set("tags", tag)
   tags = tag.replaceAll(" ","+") ?? ""
-  history.pushState({}, '', videoUrl.href)
+  history.replaceState(null, 'lowerLew', (videoUrl.href.replace("sortby", "sortBy") ?? videoUrl.href))
   //------ more sorting types instead of just random
-  sortBy = videoUrl.searchParams.get("sortBy")
+  sortBy = videoUrl.searchParams.get("sortBy") ?? videoUrl.searchParams.get("sortby")
   switch (sortBy) {
     case "random":
       tags = tags + "+sort:random"
@@ -61,10 +61,13 @@ async function search(web, tag, quantity) {
       randomBtn.textContent = "Random"
       break;
   }
-  blackList = localStorage.getItem("blacklist") ?? "+"
-  blackList = blackList.replaceAll(" ", "+-") 
+  blackList = localStorage.getItem("blacklist") ?? "notValid_tag"
+  if (blackList[0] == " ") {
+    blackList = blackList.replace(" ", "")
+  }
+  blackList = blackList.replaceAll(" ", "+-")
   console.log("blocked content: " + blackList)
-  tags = tags + "+score:>25+" + blackList
+  tags = tags + "+score:>25+-" + blackList
   
   
   let url = "https://api.rule34.xxx/index.php?" + api_key + "&page=dapi&s=post&q=index&limit="+ quantity +"&tags="+ tags +"&json=1"
@@ -76,11 +79,17 @@ async function search(web, tag, quantity) {
   try {
     let resp = await fetch(url)
     let json = await resp.json()
-    console.log(json)
+    //console.log(json)
     container.replaceChildren();
+    itemCounter = 0
     json.forEach((i, inde) => {
-      console.log("==== [" + (inde + 1) +"] ====" )
-      console.log(i)
+      if (inde < 100) {
+        console.log("==== [" + (inde + 1) +"] ====" )
+        console.log(i)
+      }
+      else {
+        itemCounter += 1
+      }
       var btn = document.createElement("button")
       btn.style.visibility = 'hidden'
       btn.style.height = sizeButton
@@ -116,6 +125,7 @@ async function search(web, tag, quantity) {
       body.appendChild(btn);
       img.style.visibility = 'visible'
     })
+    console.log("==== [ And " + itemCounter +" others] ====")
     isSearching = false
   }
   catch (e){
@@ -237,6 +247,7 @@ async function randomState() {
     sessionStorage.setItem('random', true)
     randomBtn.style.backgroundColor = "green"
     videoUrl.searchParams.set("sortBy", "random")
+    randomBtn.textContent = "random"
   }
 }
 
